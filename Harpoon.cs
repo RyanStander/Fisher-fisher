@@ -5,11 +5,10 @@ using UnityEngine;
 public class Harpoon : MonoBehaviour
 {
     private LineRenderer renderedLine;
-    private Vector3 grapplePoint;
     public LayerMask grappleLayer;
     public Transform harpoonTip, player;
     private SpringJoint joint;
-    private Transform grappledObject;
+    private GameObject grappledObject;
 
     void Awake()
     {
@@ -18,7 +17,6 @@ public class Harpoon : MonoBehaviour
     
     void Update()
     {
-        //StartGrapple();
         if (Input.GetKeyDown(KeyCode.Space) && !joint)
         {
             StartGrapple();
@@ -35,27 +33,26 @@ public class Harpoon : MonoBehaviour
 
     void StartGrapple()
     {
-        Vector3 forwardDirection = this.transform.TransformDirection(Vector3.forward);
-
+        //Raycast to see if an object is hit
         RaycastHit hit;
-        
         if(Physics.Raycast(transform.position, transform.forward, out hit, 10))
         {
             Debug.Log("Raycast hit: " + hit.collider);
-            //Debug.DrawRay(this.transform.position, forwardDirection * 50, Color.green);
 
-            grapplePoint = hit.point;
+            //Sets the grappled object to the collided object
+            grappledObject = hit.collider.gameObject;
+
+            //Adds the joint component and configures correctly
             joint = player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
-            joint.connectedAnchor = grapplePoint;
 
-            float distanceFromPoint = Vector3.Distance(player.position,grapplePoint);
-            joint.maxDistance = distanceFromPoint * 0.9f;
-            joint.minDistance = distanceFromPoint * 0.1f;
+            //Sets restrictions between the points
+            joint.maxDistance = 10;
+            joint.minDistance = Vector3.Distance(player.position, hit.point) * 0.1f;
 
-            joint.spring = 4;
-            joint.damper = 6;
-            joint.massScale =4;
+            //Parameters that affect the spring
+            joint.spring = 10;
+            joint.damper = 0;
 
             renderedLine.positionCount = 2;
         }
@@ -65,13 +62,17 @@ public class Harpoon : MonoBehaviour
         //If no joints, dont draw
         if (!joint) return;
 
-        //If joints, draw
+        //Keeps the connected anchor on the grappled object
+        joint.connectedAnchor = grappledObject.transform.position;
+
+        //If a joint exists, visually draw
         renderedLine.SetPosition(0,harpoonTip.position);
-        renderedLine.SetPosition(1, grapplePoint);
+        renderedLine.SetPosition(1, grappledObject.transform.position);
     }
 
     void StopGrapple()
     {
+        //Removes total vertices and destroyes the joint
         renderedLine.positionCount = 0;
         Destroy(joint);
     }
