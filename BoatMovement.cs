@@ -4,42 +4,39 @@ using UnityEngine;
 
 public class BoatMovement : MonoBehaviour
 {
+    [SerializeField]
+    [Header("Boat Attributes")]
     public float moveSpeed; //Speed of the boat
     public float turnSpeed; //Speed at which the boat can turn
     public float dragFactor; //Factor at which the velocity is reduced
 
-    Rigidbody rBody;
+    private Rigidbody rBody;
 
     // Start is called before the first frame update
     void Start()
     {
         rBody = GetComponent<Rigidbody>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-    }
     void FixedUpdate()
     {
         //Forward movement
-        if(Input.GetKey(KeyCode.UpArrow))
+        if(Input.GetKey(KeyCode.W))
         {
             rBody.AddRelativeForce(Vector3.forward * moveSpeed);
         }
         //Backward movement
-        else if (Input.GetKey(KeyCode.DownArrow))
+        else if (Input.GetKey(KeyCode.S))
         {
-             rBody.AddRelativeForce(-Vector3.forward/2* moveSpeed);
+            rBody.AddRelativeForce(-Vector3.forward/2* moveSpeed);
         }
 
         //Right rotation
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.D))
         {
             transform.Rotate(Vector3.up * turnSpeed * Time.deltaTime);
         }
         //Left rotation
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.A))
         {
             transform.Rotate(-Vector3.up * turnSpeed * Time.deltaTime);
         }
