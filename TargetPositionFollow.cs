@@ -9,11 +9,12 @@ public class TargetPositionFollow : MonoBehaviour
     [SerializeField]
     private float easingSpeed=0.9f;
 
-    void LateUpdate()
+    void Update()
     {
         transform.position = targetObject.transform.position;
         //easingTowards();
     }
+
     private void easingTowards()
     {
         //Calculate a step for the following object towards the target object

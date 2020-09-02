@@ -6,7 +6,6 @@ public class PlayerCamera : MonoBehaviour
 {
     [SerializeField]
     private float cameraSpeed=20; //Rotation speed for camera
-    
     public GameObject target;
 
     void Start()
@@ -17,12 +16,12 @@ public class PlayerCamera : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //Rotates the camera to constantly look at where the boat is
-        transform.LookAt(target.transform);
-
         CameraShift();
+        transform.LookAt(target.transform);
+        
         //KeyCameraShift();
     }
 
