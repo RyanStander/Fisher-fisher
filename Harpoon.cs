@@ -43,7 +43,7 @@ public class Harpoon : MonoBehaviour
             grappledObject = hit.collider.gameObject;
 
             //Adds the joint component and configures correctly
-            joint = player.gameObject.AddComponent<SpringJoint>();
+            joint = hit.collider.gameObject.AddComponent<SpringJoint>();//player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
 
             //Sets restrictions between the points
@@ -63,7 +63,7 @@ public class Harpoon : MonoBehaviour
         if (!joint) return;
 
         //Keeps the connected anchor on the grappled object
-        joint.connectedAnchor = grappledObject.transform.position;
+        joint.connectedAnchor = player.transform.position;//grappledObject.transform.position;
 
         //If a joint exists, visually draw
         renderedLine.SetPosition(0,harpoonTip.position);
