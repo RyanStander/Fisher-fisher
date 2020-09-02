@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Harpoon : MonoBehaviour
 {
+    public int harpoonRange=15;
+
     private LineRenderer renderedLine;
     public LayerMask grappleLayer;
     public Transform harpoonTip, player;
@@ -35,7 +37,7 @@ public class Harpoon : MonoBehaviour
     {
         //Raycast to see if an object is hit
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, transform.forward, out hit, 10))
+        if(Physics.Raycast(transform.position, transform.forward, out hit, harpoonRange))
         {
             Debug.Log("Raycast hit: " + hit.collider);
 
