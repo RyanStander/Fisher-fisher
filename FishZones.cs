@@ -47,4 +47,12 @@ public class FishZones : MonoBehaviour
         }
 
     }
+    public float GetMaxFishStock()
+    {
+        return fishStock;
+    }
+    public float GetCurFishStock()
+    {
+        return _curFishStock;
+    }
 }

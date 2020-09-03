@@ -36,7 +36,7 @@ public class AIMovement : MonoBehaviour
     }
     private void CheckIfPlayerClose()
     {
-        Debug.Log("distance is: " + Vector3.Distance(_player.transform.position, transform.position));
+        //Debug.Log("distance is: " + Vector3.Distance(_player.transform.position, transform.position));
         if (Vector3.Distance(_player.transform.position, transform.position) < 15)
         {
             _isPlayerClose = true;
@@ -130,7 +130,7 @@ public class AIMovement : MonoBehaviour
         }
         else if (_isPlayerClose)
         {            
-            Debug.Log("running away");
+            //Debug.Log("running away");
             TurnAwayFromPlayer();
         }
         else
