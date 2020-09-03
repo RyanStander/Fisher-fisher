@@ -23,11 +23,7 @@ public class Harpoon : MonoBehaviour
         {
             StartGrapple();
         }
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StopGrapple();
-        }
-        else if(!jointsAreValid())
+        else if (Input.GetKeyDown(KeyCode.Space) || !jointsAreValid())
         {
             StopGrapple();
         }
