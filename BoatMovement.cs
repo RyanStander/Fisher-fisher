@@ -12,7 +12,7 @@ public class BoatMovement : MonoBehaviour
     [Range(2f, 10f)]
     public int maximumSpeed = 5;
     [Range(0.05f, 0.1f)]
-    public float turningStrength = 5f;
+    public float turningStrength = 0.05f;
     [Range(0.5f, 0.99f)]
     public float playerSpeedSlowdown = 0.8f;
 
