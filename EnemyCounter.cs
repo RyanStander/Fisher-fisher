@@ -26,7 +26,7 @@ public class EnemyCounter : MonoBehaviour
             timer--;
             if (timer < 0)
             {
-                SceneManager.LoadScene(0);
+                SceneManager.LoadScene("WinScene");
             }
         }
     }
