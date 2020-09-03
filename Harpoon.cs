@@ -27,6 +27,10 @@ public class Harpoon : MonoBehaviour
         {
             StopGrapple();
         }
+        else if(!jointsAreValid())
+        {
+            StopGrapple();
+        }
     }
     void LateUpdate()
     {
@@ -77,6 +81,13 @@ public class Harpoon : MonoBehaviour
         //Removes total vertices and destroyes the joint
         renderedLine.positionCount = 0;
         Destroy(joint);
+    }
+
+    //Checks that the jointed objects are still active/valid, if not, stop grapple
+    private bool jointsAreValid()
+    {
+        if (joint == null) return false;
+        else return true;
     }
 
 }
