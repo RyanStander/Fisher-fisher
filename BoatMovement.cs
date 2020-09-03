@@ -21,35 +21,54 @@ public class BoatMovement : MonoBehaviour
     {
         rBody = GetComponent<Rigidbody>();
     }
-    void FixedUpdate()
+    void Update()
     {
         axisInputMovement();
     }
 
+    private float moveDeaccelaration = 1;
     //Movement based on input of the axis controls
     private void axisInputMovement()
     {
         //Axis Input
-        moveForce = Input.GetAxis("Vertical") * moveSpeed;
+        moveForce = Input.GetAxis("Vertical") * moveSpeed + moveDeaccelaration;
 
         //If input is negative (reversing), half force
         if (moveForce < 0)
         {
             moveForce *= 0.75f;
         }
+
+        //Movement deaccelaration
+        if (Input.GetAxis("Vertical") == 0 && moveForce > 0)
+        {
+            moveDeaccelaration -= 0.05f;
+        }
+        else if(Input.GetAxis("Vertical") == 0 && moveForce < 0)
+        {
+            moveDeaccelaration += 0.05f;
+        }
+        else if(Input.GetAxis("Vertical")<=0)
+        {
+            moveDeaccelaration = -7.5f;
+        }
+        else if (Input.GetAxis("Vertical") >= 0)
+        {
+            moveDeaccelaration = 7.5f;
+        }
         
         //Forward/Backwards movement based on axis input
         rBody.AddForce(transform.forward * moveForce);
 
-        //Normalized for the inputs
-        Vector2 horizontalInputVector = new Vector2(Input.GetAxis("Horizontal"),0);
+        //Normalize the horizontal input
+        Vector2 horizontalInputVector = new Vector2(Input.GetAxis("Horizontal"), 0.01f);
 
         //Rotate based on input and current player movement forward
         transform.Rotate(Vector3.up * horizontalInputVector.normalized.x * turnStrength * moveForce * Time.deltaTime);
-        //transform.Rotate(Vector3.up * Input.GetAxis("Horizontal") * turnSpeed * Time.deltaTime);
 
-        //Reduces the velocity over time to slow down the movement
-        rBody.velocity *= dragFactor;
+         //Reduces the velocity over time to slow down the movement
+         rBody.velocity *= dragFactor;
     }
+
 
 }
