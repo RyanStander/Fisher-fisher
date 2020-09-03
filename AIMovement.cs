@@ -37,18 +37,18 @@ public class AIMovement : MonoBehaviour
     private void CheckIfPlayerClose()
     {
         //Debug.Log("distance is: " + Vector3.Distance(_player.transform.position, transform.position));
-        if (Vector3.Distance(_player.transform.position, transform.position) < 15)
+        if (Vector3.Distance(_player.transform.position, transform.position) < 20)
         {
             _isPlayerClose = true;
         }
-        if (Vector3.Distance(_player.transform.position, transform.position)>30)
+        if (Vector3.Distance(_player.transform.position, transform.position)>40)
         {
             _isPlayerClose = false;
         }
     }
     private void FishDepletion()
     {
-        if (Vector3.Distance(_currentTarget.transform.position, transform.position) < 3)
+        if (Vector3.Distance(_currentTarget.transform.position, transform.position) < 5)
         {
             FishZones fz= _currentTarget.transform.root.GetComponent<FishZones>();
             fz.DepleteFishStock(fishingRate);
@@ -56,7 +56,7 @@ public class AIMovement : MonoBehaviour
     }
     private void SlowIfClose()
     {
-        if (Vector3.Distance(_currentTarget.transform.position, transform.position)<4&&!_isPlayerClose)
+        if (Vector3.Distance(_currentTarget.transform.position, transform.position)<7&&!_isPlayerClose)
         {
             currentSpeed--;
             if (currentSpeed < 0)
