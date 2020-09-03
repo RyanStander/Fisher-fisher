@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class BoatMovement : MonoBehaviour
 {
-    [SerializeField]
     [Header("Boat Attributes")]
-    public float moveSpeed=20; //Speed of the boat
-    [Range(1,5)]
-    public float turnStrength=3; //Multiplier at which the boat can turn when moving
-
-    public float dragFactor = 0.9f; //Factor at which the velocity is reduced
-
-    private float moveForce;
+    [Range(0.5f, 2f)]
+    public float speedFrontStrength = 1;
+    [Range(0.5f, 2f)]
+    public float speedBackStrength = 0.75f;
+    [Range(2f, 10f)]
+    public int maximumSpeed = 5;
+    [Range(0.05f, 0.1f)]
+    public float turningStrength = 5f;
+    [Range(0.5f, 0.99f)]
+    public float playerSpeedSlowdown = 0.8f;
 
     private Rigidbody rBody;
 
@@ -23,52 +25,36 @@ public class BoatMovement : MonoBehaviour
     }
     void Update()
     {
-        axisInputMovement();
+        playerMovement();
     }
-
-    private float moveDeaccelaration = 1;
-    //Movement based on input of the axis controls
-    private void axisInputMovement()
+ 
+    private float playerSpeed;
+    private void playerMovement()
     {
-        //Axis Input
-        moveForce = Input.GetAxis("Vertical") * moveSpeed + moveDeaccelaration;
-
-        //If input is negative (reversing), half force
-        if (moveForce < 0)
+        //Turning
+        if (Input.GetKey(KeyCode.A))
         {
-            moveForce *= 0.75f;
+            transform.Rotate(-turningStrength * playerSpeed * Vector3.up);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.Rotate(turningStrength * playerSpeed * Vector3.up);
         }
 
-        //Movement deaccelaration
-        if (Input.GetAxis("Vertical") == 0 && moveForce > 0)
+        //Forward/Backwards
+        if (Input.GetKey(KeyCode.W) && playerSpeed <= maximumSpeed)
         {
-            moveDeaccelaration -= 0.05f;
+            playerSpeed += speedFrontStrength;
         }
-        else if(Input.GetAxis("Vertical") == 0 && moveForce < 0)
+        if (Input.GetKey(KeyCode.S) && playerSpeed >= -maximumSpeed)
         {
-            moveDeaccelaration += 0.05f;
-        }
-        else if(Input.GetAxis("Vertical")<=0)
-        {
-            moveDeaccelaration = -7.5f;
-        }
-        else if (Input.GetAxis("Vertical") >= 0)
-        {
-            moveDeaccelaration = 7.5f;
+            playerSpeed -= speedBackStrength; //Speed up is weaker in reverse
         }
         
-        //Forward/Backwards movement based on axis input
-        rBody.AddForce(transform.forward * moveForce);
+        //Apply the speed to the player
+        rBody.AddRelativeForce(Vector3.forward * playerSpeed);
 
-        //Normalize the horizontal input
-        Vector2 horizontalInputVector = new Vector2(Input.GetAxis("Horizontal"), 0.01f);
-
-        //Rotate based on input and current player movement forward
-        transform.Rotate(Vector3.up * horizontalInputVector.normalized.x * turnStrength * moveForce * Time.deltaTime);
-
-         //Reduces the velocity over time to slow down the movement
-         rBody.velocity *= dragFactor;
+        //Apply a slowdown to the player speed
+        playerSpeed *= playerSpeedSlowdown;
     }
-
-
 }
