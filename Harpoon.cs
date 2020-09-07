@@ -19,11 +19,12 @@ public class Harpoon : MonoBehaviour
     
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !joint)
+        //Inputs to start or end grapple
+        if (Input.GetMouseButtonDown(0) && !joint)
         {
             StartGrapple();
         }
-        else if (Input.GetKeyDown(KeyCode.Space) || !jointsAreValid())
+        else if (Input.GetMouseButtonDown(0) || !jointsAreValid())
         {
             StopGrapple();
         }
