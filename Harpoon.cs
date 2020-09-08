@@ -10,8 +10,16 @@ public class Harpoon : MonoBehaviour
     public LayerMask grappleLayer;
     public Transform harpoonTip, player;
     private SpringJoint joint;
-    private GameObject grappledObject;
+    private GameObject grappledObject=null;
 
+    void OnEnable()
+    {
+        EventManager.onFailedSkillCheck += StopGrapple;
+    }
+    void OnDisable()
+    {
+        EventManager.onFailedSkillCheck -= StopGrapple;
+    }
     void Awake()
     {
         renderedLine = GetComponent<LineRenderer>();
@@ -43,10 +51,16 @@ public class Harpoon : MonoBehaviour
             Debug.Log("Raycast hit: " + hit.collider);
 
             //Sets the grappled object to the collided object
+            if (hit.collider.gameObject.tag!="Enemy") return;
+
+            //Sets the current grappled object to the hit ship
             grappledObject = hit.collider.gameObject;
 
+            //Fires off event that ship has been grappled with its paramenters
+            EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond);
+
             //Adds the joint component and configures correctly
-            joint = hit.collider.gameObject.AddComponent<SpringJoint>();//player.gameObject.AddComponent<SpringJoint>();
+            joint = hit.collider.gameObject.AddComponent<SpringJoint>();///player.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
 
             //Sets restrictions between the points
@@ -66,16 +80,17 @@ public class Harpoon : MonoBehaviour
         if (!joint) return;
 
         //Keeps the connected anchor on the grappled object
-        joint.connectedAnchor = player.transform.position;//grappledObject.transform.position;
+        joint.connectedAnchor = player.transform.position;///grappledObject.transform.position;
 
         //If a joint exists, visually draw
         renderedLine.SetPosition(0,harpoonTip.position);
         renderedLine.SetPosition(1, grappledObject.transform.position);
     }
 
-    void StopGrapple()
+    public void StopGrapple()
     {
-        //Removes total vertices and destroyes the joint
+        //Removes total vertices, destroys the joint and nulls the grapples boat
+        grappledObject = null;
         renderedLine.positionCount = 0;
         Destroy(joint);
     }

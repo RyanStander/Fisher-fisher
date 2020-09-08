@@ -6,22 +6,15 @@ public class EnemyCapture : MonoBehaviour
 {
     public GameObject captureEffect=null;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     //Checks if entered capture zone
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Harbor")
         {
+            //Fires this event to simply stop the grapple
+            EventManager.onFailedSkillCheck();
+
+            //Runs capture effect (if given) and destroys the target
             reachedCapturePoint();
             return;
         }
