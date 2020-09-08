@@ -11,4 +11,8 @@ public class StaticValues : MonoBehaviour
     static public int CurrencyUpgrade=0;
 
     static public int Coins = 2000;
+
+    static public int CoinsGained = 0;
+
+    static public string LastMission = "";
 }
