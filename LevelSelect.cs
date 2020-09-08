@@ -7,6 +7,7 @@ public class LevelSelect : MonoBehaviour
     private int selectedLevel = 0;
     [SerializeField] string[] _level=null;
     [SerializeField] TextMeshProUGUI _levelText=null;
+    private float currentSelection;
     public void Start()
     {
         _levelText.SetText("Level: " + _level[selectedLevel]);
@@ -14,8 +15,8 @@ public class LevelSelect : MonoBehaviour
     public void PlayGame()
     {
         //Loads the selected level        
-
-        SceneManager.LoadScene(_level[0]);
+        StaticValues.LastMission = _level[selectedLevel];
+        SceneManager.LoadScene(_level[selectedLevel]);
     }
     public void SelectLeft()
     {
