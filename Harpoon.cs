@@ -34,7 +34,9 @@ public class Harpoon : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0) || !jointsAreValid())
         {
-            StopGrapple();
+            //Called to disable the skill check event if currently active and to stop grapple
+            EventManager.FailedSkillCheck();
+            //StopGrapple();
         }
     }
     void LateUpdate()
@@ -57,7 +59,7 @@ public class Harpoon : MonoBehaviour
             grappledObject = hit.collider.gameObject;
 
             //Fires off event that ship has been grappled with its paramenters
-            EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond);
+            EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond, StaticValues.PlungerStrength);
 
             //Adds the joint component and configures correctly
             joint = hit.collider.gameObject.AddComponent<SpringJoint>();///player.gameObject.AddComponent<SpringJoint>();
