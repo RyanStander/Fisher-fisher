@@ -15,6 +15,7 @@ public class BoatMovement : MonoBehaviour
     public float turningStrength = 0.05f;
     [Range(0.5f, 0.99f)]
     public float playerSpeedSlowdown = 0.8f;
+    [SerializeField] float[] speedBoostLevel = {0,0.05f,0.10f,0.15f,0.20f };
 
     private Rigidbody rBody;
 
@@ -44,11 +45,11 @@ public class BoatMovement : MonoBehaviour
         //Forward/Backwards
         if (Input.GetKey(KeyCode.W) && playerSpeed <= maximumSpeed)
         {
-            playerSpeed += speedFrontStrength;
+            playerSpeed += speedFrontStrength+speedBoostLevel[StaticValues.EnginePower];
         }
         if (Input.GetKey(KeyCode.S) && playerSpeed >= -maximumSpeed)
         {
-            playerSpeed -= speedBackStrength; //Speed up is weaker in reverse
+            playerSpeed -= speedBackStrength - speedBoostLevel[StaticValues.EnginePower]; //Speed up is weaker in reverse
         }
         
         //Apply the speed to the player
