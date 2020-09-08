@@ -9,6 +9,8 @@ public class EnemyCounter : MonoBehaviour
     private TextMeshProUGUI _enemiesLeft;
     private GameObject[] _gameObject;
     private float timer=100;
+    private GameObject[] _fishRemaining;
+    [SerializeField] float[] moneyGain = { 0,0.01f, 0.025f, 0.05f, 0.075f };
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +28,9 @@ public class EnemyCounter : MonoBehaviour
             timer--;
             if (timer < 0)
             {
+                _fishRemaining = GameObject.FindGameObjectsWithTag("FishingZone");
+                StaticValues.CoinsGained = _fishRemaining.Length * 10 + (int)(_fishRemaining.Length * moneyGain[StaticValues.CurrencyUpgrade]);
+                StaticValues.Coins += StaticValues.CoinsGained;
                 SceneManager.LoadScene("WinScene");
             }
         }
