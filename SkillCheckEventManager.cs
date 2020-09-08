@@ -9,6 +9,7 @@ public class SkillCheckEventManager : MonoBehaviour
     private float zoneThreshold;
     private int skillCheckChance;
     private float timePassed;
+    private bool isPlungerStrong;
 
     public GameObject skillCheckEventHolder;
 
@@ -16,24 +17,38 @@ public class SkillCheckEventManager : MonoBehaviour
     {
         EventManager.onStartSkillCheckEvent += StartEvent;
         EventManager.onSuccessfulSkillCheck += ToggleTimerOn;
+        EventManager.onPlungerSaveSkillCheck += PlungerState;
+        EventManager.onFailedSkillCheck += ToggleTimerOff;
     }
     void OnDisable()
     {
         EventManager.onStartSkillCheckEvent -= StartEvent;
         EventManager.onSuccessfulSkillCheck -= ToggleTimerOn;
+        EventManager.onPlungerSaveSkillCheck -= PlungerState;
+        EventManager.onFailedSkillCheck -= ToggleTimerOff;
     }
-    public void StartEvent(float givenSkillSpeed, float givenZoneThreshold, int givenSkillCheckChance)
+    public void StartEvent(float givenSkillSpeed, float givenZoneThreshold, int givenSkillCheckChance, bool plungerStrength)
     {
         skillSpeed = givenSkillSpeed;
         zoneThreshold= givenZoneThreshold;
         skillCheckChance= givenSkillCheckChance;
+        isPlungerStrong = plungerStrength;
 
         //Start timer
         startSkillChanceTimer = true;
     }
+    private void PlungerState(bool plungerStrength)
+    {
+        isPlungerStrong = plungerStrength;
+        ToggleTimerOn();
+    }
     private void ToggleTimerOn()
     {
         startSkillChanceTimer = true;
+    }
+    private void ToggleTimerOff()
+    {
+        startSkillChanceTimer = false;
     }
 
     // Update is called once per frame
@@ -56,7 +71,7 @@ public class SkillCheckEventManager : MonoBehaviour
             if (Random.Range(0, 100) <= skillCheckChance)
             {
                 skillCheckEventHolder.SetActive(true);
-                skillCheckEventHolder.GetComponent<SkillCheckEvent>().StartEvent(skillSpeed,zoneThreshold);
+                skillCheckEventHolder.GetComponent<SkillCheckEvent>().StartEvent(skillSpeed,zoneThreshold,isPlungerStrong);
                 startSkillChanceTimer = false;
             }
         }
