@@ -144,15 +144,18 @@ public class AIMovement : MonoBehaviour
     }
     private void TargetSwitching()
     {
-        _targets = GameObject.FindGameObjectsWithTag(targetTag);
-        GameObject closest = _targets[0];
-        _currentTarget = closest ;
-        foreach (GameObject target in _targets)
+        if (_targets != null)
         {
-            if (Vector3.Distance(transform.position, target.transform.position) < Vector3.Distance(transform.position, closest.transform.position))
+            _targets = GameObject.FindGameObjectsWithTag(targetTag);
+            GameObject closest = _targets[0];
+            _currentTarget = closest;
+            foreach (GameObject target in _targets)
             {
-                closest = target;
-                _currentTarget = target;
+                if (Vector3.Distance(transform.position, target.transform.position) < Vector3.Distance(transform.position, closest.transform.position))
+                {
+                    closest = target;
+                    _currentTarget = target;
+                }
             }
         }
     }
