@@ -10,10 +10,7 @@ public class EventManager : MonoBehaviour
     //Fire the event for any subscribed
     public static void MyEvent()
     {
-        if(onMyEvent !=null)
-        {
-            onMyEvent();
-        }
+        onMyEvent?.Invoke();
     }
 
     public delegate void StartSkillCheckEventDelegate(float speed, float treshold, int eventChance, bool plungerStrength); //Define the method signature
@@ -73,6 +70,18 @@ public class EventManager : MonoBehaviour
         if (onPlungerSaveSkillCheck != null)
         {
             onPlungerSaveSkillCheck(plungerStrength);
+        }
+    }
+
+    public delegate void EarlyPlungerEndDelegate(); //Define the method signature
+    public static EarlyPlungerEndDelegate onEarlyPlungerEnd; //Define the event 
+
+    //Fire the event for any subscribed
+    public static void EarlyPlungerEnd()
+    {
+        if (onEarlyPlungerEnd != null)
+        {
+            onEarlyPlungerEnd();
         }
     }
 }

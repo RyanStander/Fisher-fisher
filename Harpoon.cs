@@ -15,10 +15,12 @@ public class Harpoon : MonoBehaviour
     void OnEnable()
     {
         EventManager.onFailedSkillCheck += StopGrapple;
+        EventManager.onEarlyPlungerEnd += StopGrapple;
     }
     void OnDisable()
     {
         EventManager.onFailedSkillCheck -= StopGrapple;
+        EventManager.onEarlyPlungerEnd -= StopGrapple;
     }
     void Awake()
     {
@@ -32,11 +34,15 @@ public class Harpoon : MonoBehaviour
         {
             StartGrapple();
         }
-        else if (Input.GetMouseButtonDown(0) || !jointsAreValid())
+        else if (Input.GetMouseButtonDown(0))
         {
             //Called to disable the skill check event if currently active and to stop grapple
-            EventManager.FailedSkillCheck();
-            //StopGrapple();
+            EventManager.onEarlyPlungerEnd();
+        }
+        else if(!jointsAreValid())
+        {
+            //Called separately to mouse button
+            StopGrapple();
         }
     }
     void LateUpdate()

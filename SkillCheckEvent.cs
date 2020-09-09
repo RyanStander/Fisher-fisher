@@ -14,6 +14,7 @@ public class SkillCheckEvent : MonoBehaviour
     //Resets the movement and skill zone when being activated
     public void StartEvent(float skillSpeed,float skillZonePositionThreshold, bool plungerStrength)
     {
+        //If the plunger has a second try on a failed skill check, purchased in the store
         isPlungerStrong = plungerStrength;
 
         //Retrieve UI elements
@@ -36,7 +37,7 @@ public class SkillCheckEvent : MonoBehaviour
         {
             if(isPlungerStrong)
             {
-                isPlungerStrong = false;
+                //Calls the start of the skill check event but without a strong plunger
                 EventManager.onPlungerSaveSkillCheck(false);
             }
             else
@@ -46,15 +47,15 @@ public class SkillCheckEvent : MonoBehaviour
         }
         else
         {
-            //If critical success, fire off event for speed boost
+            //If critical success, fire off event for speed boost and consider it a successful skill check
             if (isCritical())
             {
-                Debug.Log("Skill check was critical!");
-                //EventManager.onCriticalSkillCheck();
+                EventManager.onCriticalSkillCheck();
             }
             EventManager.onSuccessfulSkillCheck();
         }
 
+        //Set self to false and wait to be activated by the next skill check event
         gameObject.SetActive(false);
     }
 

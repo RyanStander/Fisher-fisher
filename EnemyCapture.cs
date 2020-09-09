@@ -12,7 +12,7 @@ public class EnemyCapture : MonoBehaviour
         if (other.gameObject.tag == "Harbor")
         {
             //Fires this event to simply stop the grapple
-            EventManager.onFailedSkillCheck();
+            EventManager.onEarlyPlungerEnd();
 
             //Runs capture effect (if given) and destroys the target
             reachedCapturePoint();

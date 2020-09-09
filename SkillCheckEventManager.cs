@@ -19,6 +19,7 @@ public class SkillCheckEventManager : MonoBehaviour
         EventManager.onSuccessfulSkillCheck += ToggleTimerOn;
         EventManager.onPlungerSaveSkillCheck += PlungerState;
         EventManager.onFailedSkillCheck += ToggleTimerOff;
+        EventManager.onEarlyPlungerEnd += DisableSkillCheck;
     }
     void OnDisable()
     {
@@ -26,6 +27,7 @@ public class SkillCheckEventManager : MonoBehaviour
         EventManager.onSuccessfulSkillCheck -= ToggleTimerOn;
         EventManager.onPlungerSaveSkillCheck -= PlungerState;
         EventManager.onFailedSkillCheck -= ToggleTimerOff;
+        EventManager.onEarlyPlungerEnd -= DisableSkillCheck;
     }
     public void StartEvent(float givenSkillSpeed, float givenZoneThreshold, int givenSkillCheckChance, bool plungerStrength)
     {
@@ -49,6 +51,13 @@ public class SkillCheckEventManager : MonoBehaviour
     private void ToggleTimerOff()
     {
         startSkillChanceTimer = false;
+    }
+    //Disables the skill check if plunger is ended early
+    private void DisableSkillCheck()
+    {
+        skillCheckEventHolder.SetActive(false);
+        Debug.Log("WRIIIII");
+        ToggleTimerOff();
     }
 
     // Update is called once per frame

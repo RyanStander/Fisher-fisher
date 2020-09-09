@@ -57,7 +57,6 @@ public class BoatMovement : MonoBehaviour
         {
             accelarationBoost();
         }
-        Debug.Log(currentAccelarationBoost);
         playerMovement();
     }
 
