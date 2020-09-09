@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+
 
 public class FishCounter : MonoBehaviour
 {
     private TextMeshProUGUI _fishLeft;
     private List<FishZones> _fishZones=new List<FishZones>();
     private float _maxFish;
+    private float timer = 100;
     private float _curFish;
     // Start is called before the first frame update
     void Start()
@@ -31,5 +34,16 @@ public class FishCounter : MonoBehaviour
             _curFish+=fishZone.GetCurFishStock();
         }
         _fishLeft.SetText(_curFish+"/"+_maxFish);
+
+        if (_fishZones.Count < 1)
+        {
+            timer--;
+            if (timer < 0)
+            {
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
+                SceneManager.LoadScene("Failure Screen");
+            }
+        }
     }
 }
