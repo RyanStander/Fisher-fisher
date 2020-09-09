@@ -126,7 +126,7 @@ public class AIMovement : MonoBehaviour
         }
         if  (raycastOffset != Vector3.zero)
         {
-            transform.Rotate(raycastOffset * 25f * Time.deltaTime);
+            transform.Rotate(raycastOffset * rotationalDamp * Time.deltaTime);
         }
         else if (_isPlayerClose)
         {            
@@ -144,9 +144,10 @@ public class AIMovement : MonoBehaviour
     }
     private void TargetSwitching()
     {
+        _targets = GameObject.FindGameObjectsWithTag(targetTag);
         if (_targets != null)
         {
-            _targets = GameObject.FindGameObjectsWithTag(targetTag);
+ 
             GameObject closest = _targets[0];
             _currentTarget = closest;
             foreach (GameObject target in _targets)

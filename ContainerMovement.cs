@@ -92,7 +92,7 @@ public class ContainerMovement : MonoBehaviour
         }
         if  (raycastOffset != Vector3.zero)
         {
-            transform.Rotate(raycastOffset * 25f * Time.deltaTime);
+            transform.Rotate(raycastOffset * rotationalDamp * Time.deltaTime);
         }
         else
         {
