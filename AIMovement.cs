@@ -16,7 +16,7 @@ public class AIMovement : MonoBehaviour
     [SerializeField] float maxSpeed=4;
 
     [SerializeField] float fishingRate=2;
-
+    private float _extraDampForCollisionAvoid = 40;//it for some reason doesnt work without
     private GameObject _player;
     private bool _isPlayerClose=false;
     void Start()
@@ -101,16 +101,16 @@ public class AIMovement : MonoBehaviour
     {
         //checks what is ahead of AI, depending on where this objects blocks the view of the ai it will try to turn away
         RaycastHit hit;
-        Vector3 raycastOffset=Vector3.zero;
+        Vector3 raycastOffset = Vector3.zero;
         /*these are the points i am raycasting from to check where
         collisions are happening                                */
-        Vector3 left = transform.position - transform.right*rayCastOffset-transform.forward*startPoint;
+        Vector3 left = transform.position - transform.right * rayCastOffset - transform.forward * startPoint;
         Vector3 right = transform.position + transform.right * rayCastOffset - transform.forward * startPoint;
 
-       Debug.DrawRay(left, transform.forward*detectionDistance, Color.yellow);
-       Debug.DrawRay(right, transform.forward * detectionDistance, Color.yellow);
+        Debug.DrawRay(left, transform.forward * detectionDistance, Color.yellow);
+        Debug.DrawRay(right, transform.forward * detectionDistance, Color.yellow);
 
-        if (Physics.Raycast(left,transform.forward,out hit, detectionDistance))
+        if (Physics.Raycast(left, transform.forward, out hit, detectionDistance))
         {
             if (!hit.collider.CompareTag(targetTag))
             {
@@ -124,13 +124,12 @@ public class AIMovement : MonoBehaviour
                 raycastOffset += Vector3.down;
             }
         }
-        if  (raycastOffset != Vector3.zero)
+        if (raycastOffset != Vector3.zero)
         {
-            transform.Rotate(raycastOffset * rotationalDamp * Time.deltaTime);
+            transform.Rotate(raycastOffset * rotationalDamp* _extraDampForCollisionAvoid * Time.deltaTime);
         }
         else if (_isPlayerClose)
-        {            
-            //Debug.Log("running away");
+        {
             TurnAwayFromPlayer();
         }
         else
