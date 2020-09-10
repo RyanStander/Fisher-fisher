@@ -34,7 +34,7 @@ public class FireHarpoon : MonoBehaviour
         renderedLine = GetComponent<LineRenderer>();
     }
 
-    void Update()
+    void FixedUpdate()
     {
         playerInput();
 
