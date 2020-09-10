@@ -1,16 +1,23 @@
 ﻿using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class LevelSelect : MonoBehaviour
 {
     private int selectedLevel = 0;
+    [SerializeField] Sprite[] upgradeSprite = null;
     [SerializeField] string[] _level=null;
     [SerializeField] TextMeshProUGUI _levelText=null;
-    private float currentSelection;
+    [SerializeField] Image LeftPanel=null;
+    [SerializeField] Image RightPanel=null;
+    [SerializeField] Image MiddlePanel=null;
     public void Start()
     {
         _levelText.SetText("Level: " + _level[selectedLevel]);
+        MiddlePanel.sprite = upgradeSprite[selectedLevel];
+        RightPanel.sprite = upgradeSprite[selectedLevel+1];
+        LeftPanel.sprite = upgradeSprite[_level.Length - 1];
     }
     public void PlayGame()
     {
@@ -25,6 +32,15 @@ public class LevelSelect : MonoBehaviour
         else
             selectedLevel--;
         _levelText.SetText("Level: " + _level[selectedLevel]);
+        MiddlePanel.sprite = upgradeSprite[selectedLevel];
+        if (selectedLevel == 0)
+            LeftPanel.sprite = upgradeSprite[_level.Length - 1];
+        else
+            LeftPanel.sprite = upgradeSprite[selectedLevel - 1];
+        if (selectedLevel == _level.Length - 1)
+            RightPanel.sprite = upgradeSprite[0];
+        else
+            RightPanel.sprite = upgradeSprite[selectedLevel + 1];
     }
     public void SelectRight()
     {
@@ -33,6 +49,15 @@ public class LevelSelect : MonoBehaviour
         else
             selectedLevel++;
         _levelText.SetText("Level: " + _level[selectedLevel]);
+        MiddlePanel.sprite = upgradeSprite[selectedLevel];
+        if (selectedLevel == 0)
+            LeftPanel.sprite = upgradeSprite[_level.Length - 1];
+        else
+            LeftPanel.sprite = upgradeSprite[selectedLevel - 1];
+        if (selectedLevel == _level.Length - 1)
+            RightPanel.sprite = upgradeSprite[0];
+        else
+            RightPanel.sprite = upgradeSprite[selectedLevel + 1];
     }
 
 }
