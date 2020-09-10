@@ -2,15 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Harpoon : MonoBehaviour
+public class FireHarpoon : MonoBehaviour
 {
-    public int harpoonRange=15;
+    [Header("Attributes")]
+    public int harpoonRange = 15;
+    [Range(0, 10)]
+    public int harpoonSpring = 5;
+    [Range(0, 10)]
+    public int harpoonDampener = 5;
 
+    //Line/Rope
     private LineRenderer renderedLine;
-    public LayerMask grappleLayer;
-    public Transform harpoonTip, player;
     private SpringJoint joint;
-    private GameObject grappledObject=null;
+
+    public Transform harpoonFirePoint, player;
+
+    private GameObject grappledObject = null;
 
     void OnEnable()
     {
@@ -26,8 +33,14 @@ public class Harpoon : MonoBehaviour
     {
         renderedLine = GetComponent<LineRenderer>();
     }
-    
+
     void Update()
+    {
+        playerInput();
+
+        drawHarpoonRay();
+    }
+    private void playerInput()
     {
         //Inputs to start or end grapple
         if (Input.GetMouseButtonDown(0) && !joint)
@@ -39,26 +52,43 @@ public class Harpoon : MonoBehaviour
             //Called to disable the skill check event if currently active and to stop grapple
             EventManager.onEarlyPlungerEnd();
         }
-        else if(!jointsAreValid())
+        else if (!jointsAreValid())
         {
             //Called separately to mouse button
             StopGrapple();
         }
     }
+    private void drawHarpoonRay()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(harpoonFirePoint.transform.position, -harpoonFirePoint.transform.right, out hit, harpoonRange))
+        {
+            //Draws the ray if hitting
+            Debug.DrawRay(harpoonFirePoint.transform.position, -harpoonFirePoint.transform.right * harpoonRange, Color.green);
+        }
+        else
+        {
+            //Draws the ray if not hitting
+            Debug.DrawRay(harpoonFirePoint.transform.position, -harpoonFirePoint.transform.right * harpoonRange, Color.yellow);
+        }
+    }
+
     void LateUpdate()
     {
         drawRope();
     }
 
-    void StartGrapple()
+    private void StartGrapple()
     {
         //Raycast to see if an object is hit
         RaycastHit hit;
-        if(Physics.Raycast(transform.position, transform.forward, out hit, harpoonRange))
+
+        if (Physics.Raycast(harpoonFirePoint.transform.position, -harpoonFirePoint.transform.right, out hit, harpoonRange))
         {
+            //Log what is being hit by the raycast within range
             Debug.Log("Raycast hit: " + hit.collider);
 
-            //Sets the grappled object to the collided object
+            //If the raycast did not hit an enemy, return
             if (hit.collider.gameObject.tag!="Enemy") return;
 
             //Sets the current grappled object to the hit ship
@@ -67,31 +97,31 @@ public class Harpoon : MonoBehaviour
             //Fires off event that ship has been grappled with its paramenters
             EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond, StaticValues.PlungerStrength);
 
-            //Adds the joint component and configures correctly
-            joint = hit.collider.gameObject.AddComponent<SpringJoint>();///player.gameObject.AddComponent<SpringJoint>();
+            //Adds the joint component to the hit component and configures correctly
+            joint = hit.collider.gameObject.AddComponent<SpringJoint>();
             joint.autoConfigureConnectedAnchor = false;
 
             //Sets restrictions between the points
-            joint.maxDistance = 10;
-            joint.minDistance = Vector3.Distance(player.position, hit.point) * 0.1f;
+            joint.maxDistance = harpoonRange;
+            joint.minDistance = Vector3.Distance(harpoonFirePoint.position, hit.point) * 0.1f;
 
-            //Parameters that affect the spring
-            joint.spring = 10;
-            joint.damper = 0;
+            //Parameters that affect the springiness and dampening of the harpoon
+            joint.spring = harpoonSpring;
+            joint.damper = harpoonDampener;
 
             renderedLine.positionCount = 2;
         }
     }
-    void drawRope()
+    private void drawRope()
     {
-        //If no joints, dont draw
+        //If no joint exist then return
         if (!joint) return;
 
         //Keeps the connected anchor on the grappled object
         joint.connectedAnchor = player.transform.position;///grappledObject.transform.position;
 
         //If a joint exists, visually draw
-        renderedLine.SetPosition(0,harpoonTip.position);
+        renderedLine.SetPosition(0,harpoonFirePoint.position);
         renderedLine.SetPosition(1, grappledObject.transform.position);
     }
 
