@@ -94,6 +94,9 @@ public class FireHarpoon : MonoBehaviour
             //Sets the current grappled object to the hit ship
             grappledObject = hit.collider.gameObject;
 
+            //Informs the ship that it is attached to the player boat
+            grappledObject.GetComponent<EnemyCapture>().setIsAttached(true);
+
             //Fires off event that ship has been grappled with its paramenters
             EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond, StaticValues.PlungerStrength);
 
@@ -127,6 +130,9 @@ public class FireHarpoon : MonoBehaviour
 
     public void StopGrapple()
     {
+        //Informs the ship that it is no longer attached to the player boat
+        if(grappledObject != null) grappledObject.GetComponent<EnemyCapture>().setIsAttached(false);
+
         //Removes total vertices, destroys the joint and nulls the grapples boat
         grappledObject = null;
         renderedLine.positionCount = 0;

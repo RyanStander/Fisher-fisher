@@ -5,14 +5,19 @@ using UnityEngine;
 public class EnemyCapture : MonoBehaviour
 {
     public GameObject captureEffect=null;
+    private bool isAttached;
 
     //Checks if entered capture zone
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Harbor")
         {
-            //Fires this event to simply stop the grapple
-            EventManager.onEarlyPlungerEnd();
+            //Prevents other ships from canceling the skill check and only the grappled ship can
+            if(isAttached)
+            {
+                //Fires this event to simply stop the grapple
+                EventManager.onEarlyPlungerEnd();
+            }
 
             //Runs capture effect (if given) and destroys the target
             reachedCapturePoint();
@@ -30,5 +35,11 @@ public class EnemyCapture : MonoBehaviour
 
         //Destroy enemy
         Destroy(gameObject);
+    }
+
+    //Toggles the isAttached bool
+    public void setIsAttached(bool state)
+    {
+        isAttached = state;
     }
 }
