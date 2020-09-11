@@ -38,14 +38,14 @@ public class SkillCheckEvent : MonoBehaviour
             if(isPlungerStrong)
             {
                 //Calls the start of the skill check event but without a strong plunger
-                EventManager.onPlungerSaveSkillCheck(false);
+                EventManager.PlungerSaveSkillCheck(false);
             }
             else
             {
-                EventManager.onFailedSkillCheck();
+                EventManager.FailedSkillCheck();
 
                 //Toggles plunger visual
-                EventManager.onTogglePlungerEvent(true);
+                EventManager.TogglePlungerEvent(true);
             }
         }
         else
@@ -53,9 +53,9 @@ public class SkillCheckEvent : MonoBehaviour
             //If critical success, fire off event for speed boost and consider it a successful skill check
             if (isCritical())
             {
-                EventManager.onCriticalSkillCheck();
+                EventManager.CriticalSkillCheck();
             }
-            EventManager.onSuccessfulSkillCheck();
+            EventManager.SuccessfulSkillCheck();
         }
 
         //Set self to false and wait to be activated by the next skill check event

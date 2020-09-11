@@ -16,8 +16,8 @@ public class EnemyCapture : MonoBehaviour
             if(isAttached)
             {
                 //Fires this event to simply stop the grapple
-                EventManager.onEarlyPlungerEnd();
-                EventManager.onTogglePlungerEvent(true);
+                EventManager.EarlyPlungerEnd();
+                EventManager.TogglePlungerEvent(true);
             }
 
             //Runs capture effect (if given) and destroys the target

@@ -5,7 +5,7 @@ using UnityEngine;
 public class EventManager : MonoBehaviour
 {
     public delegate void TogglePlungerEventDelegate(bool setActive); //Define the method signature
-    public static TogglePlungerEventDelegate onTogglePlungerEvent; //Define the event 
+    public static event TogglePlungerEventDelegate onTogglePlungerEvent; //Define the event 
 
     //Fire the event for any subscribed
     public static void TogglePlungerEvent(bool setActive)
@@ -17,7 +17,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void StartSkillCheckEventDelegate(float speed, float treshold, int eventChance, bool plungerStrength); //Define the method signature
-    public static StartSkillCheckEventDelegate onStartSkillCheckEvent; //Define the event 
+    public static event StartSkillCheckEventDelegate onStartSkillCheckEvent; //Define the event 
 
     //Fire the event for any subscribed
     public static void StartSkillCheckEvent(float speed, float treshold, int eventChance, bool plungerStrength)
@@ -29,7 +29,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void FailedSkillCheckDelegate(); //Define the method signature
-    public static FailedSkillCheckDelegate onFailedSkillCheck; //Define the event 
+    public static event FailedSkillCheckDelegate onFailedSkillCheck; //Define the event 
 
     //Fire the event for any subscribed
     public static void FailedSkillCheck()
@@ -41,7 +41,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void SuccessfulSkillCheckDelegate(); //Define the method signature
-    public static SuccessfulSkillCheckDelegate onSuccessfulSkillCheck; //Define the event 
+    public static event SuccessfulSkillCheckDelegate onSuccessfulSkillCheck; //Define the event 
 
     //Fire the event for any subscribed
     public static void SuccessfulSkillCheck()
@@ -53,7 +53,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void CriticalSkillCheckDelegate(); //Define the method signature
-    public static CriticalSkillCheckDelegate onCriticalSkillCheck; //Define the event 
+    public static event CriticalSkillCheckDelegate onCriticalSkillCheck; //Define the event 
 
     //Fire the event for any subscribed
     public static void CriticalSkillCheck()
@@ -65,7 +65,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void PlungerSaveSkillCheckDelegate(bool plungerStrength); //Define the method signature
-    public static PlungerSaveSkillCheckDelegate onPlungerSaveSkillCheck; //Define the event 
+    public static event PlungerSaveSkillCheckDelegate onPlungerSaveSkillCheck; //Define the event 
 
     //Fire the event for any subscribed
     public static void PlungerSaveSkillCheck(bool plungerStrength)
@@ -77,7 +77,7 @@ public class EventManager : MonoBehaviour
     }
 
     public delegate void EarlyPlungerEndDelegate(); //Define the method signature
-    public static EarlyPlungerEndDelegate onEarlyPlungerEnd; //Define the event 
+    public static event EarlyPlungerEndDelegate onEarlyPlungerEnd; //Define the event 
 
     //Fire the event for any subscribed
     public static void EarlyPlungerEnd()
