@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
-    public delegate void SomeDelegate(); //Define the method signature
-    public static SomeDelegate onMyEvent; //Define the event 
+    public delegate void TogglePlungerEventDelegate(bool setActive); //Define the method signature
+    public static TogglePlungerEventDelegate onTogglePlungerEvent; //Define the event 
 
     //Fire the event for any subscribed
-    public static void MyEvent()
+    public static void TogglePlungerEvent(bool setActive)
     {
-        onMyEvent?.Invoke();
+        if (onTogglePlungerEvent != null)
+        {
+            onTogglePlungerEvent(setActive);
+        }
     }
 
     public delegate void StartSkillCheckEventDelegate(float speed, float treshold, int eventChance, bool plungerStrength); //Define the method signature

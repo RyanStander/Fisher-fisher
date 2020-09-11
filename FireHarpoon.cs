@@ -49,11 +49,17 @@ public class FireHarpoon : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(0))
         {
+            //Toggles plunger visual
+            EventManager.onTogglePlungerEvent(true);
+
             //Called to disable the skill check event if currently active and to stop grapple
             EventManager.onEarlyPlungerEnd();
         }
         else if (!jointsAreValid())
         {
+            //Toggles plunger visual
+            EventManager.onTogglePlungerEvent(true);
+
             //Called separately to mouse button
             StopGrapple();
         }
@@ -99,6 +105,9 @@ public class FireHarpoon : MonoBehaviour
 
             //Fires off event that ship has been grappled with its paramenters
             EventManager.onStartSkillCheckEvent(grappledObject.GetComponent<EnemyEscapeEvent>().skillBarSpeed, grappledObject.GetComponent<EnemyEscapeEvent>().skillZoneThreshold, grappledObject.GetComponent<EnemyEscapeEvent>().chanceForEventPerSecond, StaticValues.PlungerStrength);
+            
+            //Toggle the plunger visual
+            EventManager.onTogglePlungerEvent(false);
 
             //Adds the joint component to the hit component and configures correctly
             joint = hit.collider.gameObject.AddComponent<SpringJoint>();

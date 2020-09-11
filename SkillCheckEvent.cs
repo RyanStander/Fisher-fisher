@@ -23,7 +23,7 @@ public class SkillCheckEvent : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         //Checks for user input and overlaping elements
         activeSkillCheck();
@@ -43,6 +43,9 @@ public class SkillCheckEvent : MonoBehaviour
             else
             {
                 EventManager.onFailedSkillCheck();
+
+                //Toggles plunger visual
+                EventManager.onTogglePlungerEvent(true);
             }
         }
         else
