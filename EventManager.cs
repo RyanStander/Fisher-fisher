@@ -4,6 +4,18 @@ using UnityEngine;
 
 public class EventManager : MonoBehaviour
 {
+    public delegate void UpdatePlayerVisualsDelegate(); //Define the method signature
+    public static event UpdatePlayerVisualsDelegate onUpdatePlayerVisuals; //Define the event 
+
+    //Fire the event for any subscribed
+    public static void UpdatePlayerVisuals()
+    {
+        if (onUpdatePlayerVisuals != null)
+        {
+            onUpdatePlayerVisuals();
+        }
+    }
+
     public delegate void TogglePlungerEventDelegate(bool setActive); //Define the method signature
     public static event TogglePlungerEventDelegate onTogglePlungerEvent; //Define the event 
 
