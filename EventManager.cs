@@ -64,15 +64,15 @@ public class EventManager : MonoBehaviour
         }
     }
 
-    public delegate void CriticalSkillCheckDelegate(); //Define the method signature
-    public static event CriticalSkillCheckDelegate onCriticalSkillCheck; //Define the event 
+    public delegate void SpeedBoostDelegate(int boost); //Define the method signature
+    public static event SpeedBoostDelegate onSpeedBoost; //Define the event 
 
     //Fire the event for any subscribed
-    public static void CriticalSkillCheck()
+    public static void SpeedBoost(int boost)
     {
-        if (onCriticalSkillCheck != null)
+        if (onSpeedBoost != null)
         {
-            onCriticalSkillCheck();
+            onSpeedBoost(boost);
         }
     }
 
@@ -97,6 +97,18 @@ public class EventManager : MonoBehaviour
         if (onEarlyPlungerEnd != null)
         {
             onEarlyPlungerEnd();
+        }
+    }
+
+    public delegate void TutorialSkillCheckStartDelegate(); //Define the method signature
+    public static event TutorialSkillCheckStartDelegate onTutorialSkillCheckStart; //Define the event 
+
+    //Fire the event for any subscribed
+    public static void TutorialSkillCheckStart()
+    {
+        if (onTutorialSkillCheckStart != null)
+        {
+            onTutorialSkillCheckStart();
         }
     }
 }

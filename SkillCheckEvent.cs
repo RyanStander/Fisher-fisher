@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Is the skill check event itself
 public class SkillCheckEvent : MonoBehaviour
 {
     [Header("SkillCheck Elements for Overlap Check")]
-    public GameObject stationaryElement;
+    public GameObject easySkillZone;
+    public GameObject mediumSkillZone;
+    public GameObject hardSkillZone;
+
     public GameObject movingElement;
-    [Range(0,100)]
-    public int criticalZoneThreshold;
+
     private bool isPlungerStrong;
 
     //Resets the movement and skill zone when being activated
@@ -17,20 +20,24 @@ public class SkillCheckEvent : MonoBehaviour
         //If the plunger has a second try on a failed skill check, purchased in the store
         isPlungerStrong = plungerStrength;
 
-        //Retrieve UI elements
-        stationaryElement.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
+        //Retrieve UI elements and tell them to have a random position based on their containing object
+        easySkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
+        mediumSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
+        hardSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
+
+        //Start up the moving bar
         movingElement.GetComponent<SkillCheckMovement>().StartUp(skillSpeed);
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
         //Checks for user input and overlaping elements
         activeSkillCheck();
     }
 
     //Stops the skill check
-    public void EndSkillCheckEvent(bool wasSuccess)
+    public void EndSkillCheckEvent(bool wasSuccess,int boost)
     {
         //If skillcheck failed, un-grapple
         if(!wasSuccess)
@@ -43,18 +50,11 @@ public class SkillCheckEvent : MonoBehaviour
             else
             {
                 EventManager.FailedSkillCheck();
-
-                //Toggles plunger visual
-                EventManager.TogglePlungerEvent(true);
             }
         }
         else
         {
-            //If critical success, fire off event for speed boost and consider it a successful skill check
-            if (isCritical())
-            {
-                EventManager.CriticalSkillCheck();
-            }
+            EventManager.SpeedBoost(boost);
             EventManager.SuccessfulSkillCheck();
         }
 
@@ -66,17 +66,27 @@ public class SkillCheckEvent : MonoBehaviour
     private void activeSkillCheck()
     {
         //Gets the RectTransform of the objects
-        RectTransform stationaryElementRectTransform = stationaryElement.GetComponent<RectTransform>();
+        RectTransform easyZoneRectTransform = easySkillZone.GetComponent<RectTransform>();
+        RectTransform mediumZoneRectTransform = mediumSkillZone.GetComponent<RectTransform>();
+        RectTransform hardZoneRectTransform = hardSkillZone.GetComponent<RectTransform>();
         RectTransform movingElementRectTransform = movingElement.GetComponent<RectTransform>();
 
-        //If the moving element overlaps the stationary element
-        if (isOverlapping(stationaryElementRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
+        //If the moving element overlaps the stationary element, boost and end the current skill check event
+        if (isOverlapping(easyZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
         {
-            EndSkillCheckEvent(true);
+            EndSkillCheckEvent(true,1);
         }
-        else if(!isOverlapping(stationaryElementRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
+        else if (isOverlapping(mediumZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
         {
-            EndSkillCheckEvent(false);
+            EndSkillCheckEvent(true,2);
+        }
+        else if (isOverlapping(hardZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
+        {
+            EndSkillCheckEvent(true,3);
+        }
+        else if(Input.GetKeyDown(KeyCode.Space))
+        {
+            EndSkillCheckEvent(false,0);
         }
     }
 
@@ -89,23 +99,5 @@ public class SkillCheckEvent : MonoBehaviour
 
         //Rerturns true if overlapping
         return firstRect.Overlaps(secondRect);
-    }
-
-    bool isCritical()
-    {
-        //Gets the RectTransform of the objects
-        RectTransform stationaryElementRectTransform = stationaryElement.GetComponent<RectTransform>();
-
-        //Gets threshold width in measurable unitys for the game
-        float criticalThreshold = (stationaryElementRectTransform.rect.width/2)*((float)criticalZoneThreshold/100);
-        
-        //The position of relevant parameters
-        float movingPosition = movingElement.transform.localPosition.x;
-        float stillPosition = stationaryElement.transform.localPosition.x;
-        float rightBound = stillPosition + criticalThreshold;
-        float leftBound = stillPosition - criticalThreshold;
-
-        //Return if within bounds
-        return (movingPosition <= rightBound && movingPosition >= leftBound);
     }
 }

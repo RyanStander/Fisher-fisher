@@ -25,7 +25,7 @@ public class SkillCheckMovement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Moves the bar
         transform.Translate(Vector3.right * skillBarSpeed);
@@ -34,13 +34,13 @@ public class SkillCheckMovement : MonoBehaviour
         if (transform.localPosition.x >= rightBound)
         {
             //Tells parent object that skill check failed
-            endSkillCheck(false);
+            endSkillCheck();
         }
     }
 
     //End Skill Check
-    private void endSkillCheck(bool wasSuccess)
+    private void endSkillCheck()
     {
-        GetComponentInParent<SkillCheckEvent>().EndSkillCheckEvent(wasSuccess);
+        GetComponentInParent<SkillCheckEvent>().EndSkillCheckEvent(false,0);
     }
 }

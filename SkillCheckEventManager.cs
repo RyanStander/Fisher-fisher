@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Is what manages the skill check and toggles it on and off with specific attributes/parameters
 public class SkillCheckEventManager : MonoBehaviour
 {
     private bool startSkillChanceTimer=false;
@@ -56,12 +57,11 @@ public class SkillCheckEventManager : MonoBehaviour
     private void DisableSkillCheck()
     {
         skillCheckEventHolder.SetActive(false);
-        Debug.Log("WRIIIII");
         ToggleTimerOff();
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if(startSkillChanceTimer)
         {
