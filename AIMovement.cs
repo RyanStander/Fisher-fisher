@@ -16,6 +16,10 @@ public class AIMovement : MonoBehaviour
     [SerializeField] float maxSpeed=4;
 
     [SerializeField] float fishingRate=2;
+    [SerializeField] float fishCaptureAmount=1;
+
+    [SerializeField] float fleeDistance = 20;
+    [SerializeField] float returnDistance = 40;
     private float _extraDampForCollisionAvoid = 40;//it for some reason doesnt work without
     private GameObject _player;
     private bool _isPlayerClose=false;
@@ -25,7 +29,7 @@ public class AIMovement : MonoBehaviour
         currentSpeed = movementSpeed;
         _player = GameObject.FindGameObjectWithTag("Player");
     }
-    void Update()
+    void FixedUpdate()
     {
         CheckIfPlayerClose();
         TargetSwitching();
@@ -36,14 +40,17 @@ public class AIMovement : MonoBehaviour
     }
     private void CheckIfPlayerClose()
     {
-        //Debug.Log("distance is: " + Vector3.Distance(_player.transform.position, transform.position));
-        if (Vector3.Distance(_player.transform.position, transform.position) < 20)
+        if (_player != null)
         {
-            _isPlayerClose = true;
-        }
-        if (Vector3.Distance(_player.transform.position, transform.position)>40)
-        {
-            _isPlayerClose = false;
+            //Debug.Log("distance is: " + Vector3.Distance(_player.transform.position, transform.position));
+            if (Vector3.Distance(_player.transform.position, transform.position) < fleeDistance)
+            {
+                _isPlayerClose = true;
+            }
+            if (Vector3.Distance(_player.transform.position, transform.position) > returnDistance)
+            {
+                _isPlayerClose = false;
+            }
         }
     }
     private void FishDepletion()
@@ -51,7 +58,7 @@ public class AIMovement : MonoBehaviour
         if (Vector3.Distance(_currentTarget.transform.position, transform.position) < 5)
         {
             FishZones fz= _currentTarget.transform.root.GetComponent<FishZones>();
-            fz.DepleteFishStock(fishingRate);
+            fz.DepleteFishStock(fishingRate, fishCaptureAmount);
         }
     }
     private void SlowIfClose()
