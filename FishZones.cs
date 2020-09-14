@@ -30,14 +30,14 @@ public class FishZones : MonoBehaviour
         if (_curFishStock > fishStock)
             _curFishStock = fishStock;
     }
-    public void DepleteFishStock(float depleteRate)
+    public void DepleteFishStock(float depleteRate,float fishCaptureAmount)
     {
         //when a fishing boat is nearby they will deplete the amount of fish in a spot over time
         if (Time.time > nextDeplete)
         {
             nextDeplete = Time.time + depleteRate;
 
-            _curFishStock--;
+            _curFishStock-= fishCaptureAmount;
 
             //Debug.Log("Fish are being depleted:" + _curFishStock);
         }
