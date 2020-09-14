@@ -18,21 +18,20 @@ public class AimHarpoon : MonoBehaviour
 
     private void rotateToPoint()
     {
-        //Relative positions
+        //Relative positions for camera and harpoon position
         Vector3 relativePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition) - harpoonContainer.transform.position;
 
         //Rotation to check
         Quaternion possibleRotation = Quaternion.Euler(0, Quaternion.LookRotation(relativePosition).eulerAngles.y - 90, 0);
 
-        //Rotate base to target point
+        //Save last valid rotation
         Quaternion lastValidRotation = harpoonContainer.transform.rotation;
+
+        //Rotate base to target point
         harpoonContainer.transform.rotation = possibleRotation;
 
-        //Gets the inspector rotation to check for rotation limits
-        float containerRotation = TransformUtils.GetInspectorRotation(harpoonContainer).y;
-
-        //Ensures the plunger rotation does not go over its limits
-        if (containerRotation < - maximumAngle || containerRotation > maximumAngle)
+        //Ensures the expected plunger rotation does not go over its limits
+        if (harpoonContainer.localEulerAngles.y > maximumAngle && harpoonContainer.localEulerAngles.y < 360 - maximumAngle)
         {
             //Corrects to previous valid rotation
             harpoonContainer.transform.rotation = lastValidRotation;
