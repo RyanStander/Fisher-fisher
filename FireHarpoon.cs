@@ -16,6 +16,7 @@ public class FireHarpoon : MonoBehaviour
     private SpringJoint joint;
 
     public Transform harpoonFirePoint, player;
+    public GameObject rangeFinder;
 
     private GameObject grappledObject = null;
 
@@ -33,21 +34,35 @@ public class FireHarpoon : MonoBehaviour
     {
         renderedLine = GetComponent<LineRenderer>();
     }
-
-    void FixedUpdate()
+    void Update()
     {
         playerInput();
-
+    }
+    void FixedUpdate()
+    {
+        drawRope();
         drawHarpoonRay();
     }
     private void playerInput()
     {
         //Inputs to start or end grapple
-        if (Input.GetMouseButtonDown(0) && !joint)
+        if (!joint)
         {
-            StartGrapple();
+            //If not currently grappling
+            if(Input.GetMouseButtonDown(0))
+            {
+                //Show visual range finder and have it update its size
+                rangeFinder.SetActive(true);
+                rangeFinder.GetComponent<RangeFinderSize>().UpdateSize(harpoonRange);
+            }
+            else if(Input.GetMouseButtonUp(0))
+            {
+                //Disable range finder and attempt a grapple
+                rangeFinder.SetActive(false);
+                StartGrapple();
+            }
         }
-        else if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonUp(0))
         {
             //Toggles plunger visual
             EventManager.TogglePlungerEvent(true);
@@ -77,11 +92,6 @@ public class FireHarpoon : MonoBehaviour
             //Draws the ray if not hitting
             Debug.DrawRay(harpoonFirePoint.transform.position, -harpoonFirePoint.transform.right * harpoonRange, Color.yellow);
         }
-    }
-
-    void LateUpdate()
-    {
-        drawRope();
     }
 
     private void StartGrapple()
