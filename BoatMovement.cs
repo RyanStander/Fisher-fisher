@@ -13,6 +13,10 @@ public class BoatMovement : MonoBehaviour
     public int maximumSpeed = 5;
     [Range(0.05f, 0.1f)]
     public float turningStrength = 0.05f;
+    [Range(0.8f, 1f)]
+    public float turningSlowdown=0.90f;
+    private float turningMomentumLeft;
+    private float turningMomentumRight;
     [Range(0.5f, 0.99f)]
     public float playerSpeedSlowdown = 0.8f;
     [SerializeField] float[] enginePowerLevel = {0,0.05f,0.10f,0.15f,0.20f };
@@ -82,26 +86,72 @@ public class BoatMovement : MonoBehaviour
         playerMovement();
     }
 
+    float turningMomentum;
     private void playerMovement()
     {
         //Turning
         if (Input.GetKey(KeyCode.A))
         {
+            //Store old momentum
+            turningMomentumLeft = -turningStrength * playerSpeed;
+
+            //Rotate "Left"
             transform.Rotate(-turningStrength * playerSpeed * Vector3.up);
+
+            Debug.Log("I AM TURNING LEFT");
         }
+        else
+        {
+            //Set to 0 so no extra momentum when reduced enough
+            if (turningMomentumLeft > 0)
+            {
+                turningMomentumLeft = 0;
+            }
+            //Extra momentum for turning
+            if (turningMomentumLeft < 0)
+            {
+                turningMomentumLeft *= turningSlowdown;
+            }
+            transform.Rotate(turningMomentumLeft * Vector3.up);
+
+            Debug.Log("NO INPUT");
+        }
+
+        //Turning
         if (Input.GetKey(KeyCode.D))
         {
+            //Store old momentum
+            turningMomentumRight = turningStrength * playerSpeed;
+
+            //Rotate "Right"
             transform.Rotate(turningStrength * playerSpeed * Vector3.up);
+
+            Debug.Log("I AM TURNING RIGHT");
+        }
+        else
+        {
+            //Set to 0 so no extra momentum when reduced enough
+            if (turningMomentumRight < 0)
+            {
+                turningMomentumRight = 0;
+            }
+            //Extra momentum for turning
+            if (turningMomentumRight > 0)
+            {
+                turningMomentumRight *= turningSlowdown;
+            }
+            transform.Rotate(turningMomentumRight * Vector3.up);
+            Debug.Log("NO INPUT");
         }
 
         //Forward/Backwards
         if (Input.GetKey(KeyCode.W) && playerSpeed <= maximumSpeed+currentAccelarationBoost)
         {
-            playerSpeed += speedFrontStrength+enginePowerLevel[StaticValues.EnginePower]+ currentAccelarationBoost;
+            playerSpeed += speedFrontStrength+enginePowerLevel[StaticValues.EnginePower] + currentAccelarationBoost;
         }
         if (Input.GetKey(KeyCode.S) && playerSpeed >= -maximumSpeed + currentAccelarationBoost) //Speed up is weaker in reverse
         {
-            playerSpeed -= speedBackStrength - enginePowerLevel[StaticValues.EnginePower]+ currentAccelarationBoost;
+            playerSpeed -= speedBackStrength - enginePowerLevel[StaticValues.EnginePower] + currentAccelarationBoost;
         }
         
         //Apply the speed to the player
