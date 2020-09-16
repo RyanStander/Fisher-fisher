@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//Has the object try and position itself randomly within its containing parent object
 public class SkillCheckZonePosition : MonoBehaviour
 {
     private float rightBound;
-    [Range(0,1f)]
-    private float extraZoneCoverage; //Extra potential zone for random position (starting from mid point backwards)
+    private float extraZoneCoverage=0.15f; //Extra potential zone for random position (starting from mid point backwards)
 
     // Start is called before the first frame update
    public void StartUp(float newCoverage)

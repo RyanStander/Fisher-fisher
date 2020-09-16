@@ -22,8 +22,8 @@ public class SkillCheckEvent : MonoBehaviour
 
         //Retrieve UI elements and tell them to have a random position based on their containing object
         easySkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
-        mediumSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
-        hardSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(skillZonePositionThreshold);
+        mediumSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(0.75f);
+        hardSkillZone.GetComponent<SkillCheckZonePosition>().StartUp(0.75f);
 
         //Start up the moving bar
         movingElement.GetComponent<SkillCheckMovement>().StartUp(skillSpeed);
@@ -72,20 +72,24 @@ public class SkillCheckEvent : MonoBehaviour
         RectTransform movingElementRectTransform = movingElement.GetComponent<RectTransform>();
 
         //If the moving element overlaps the skill zones, boost and end the current skill check event
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKey(KeyCode.Space))
         {
-            if (isOverlapping(hardZoneRectTransform, movingElementRectTransform))
+            //If easy skill zone hit
+            if (isOverlapping(movingElementRectTransform, hardZoneRectTransform))
             {
                 EndSkillCheckEvent(true, 3);
             }
-            else if (isOverlapping(mediumZoneRectTransform, movingElementRectTransform))
+            //If medium skill zone hit
+            else if (isOverlapping(movingElementRectTransform, mediumZoneRectTransform))
             {
                 EndSkillCheckEvent(true, 2);
             }
-            else if (isOverlapping(easyZoneRectTransform, movingElementRectTransform))
+            //If hard skill zone hit
+            else if (isOverlapping(movingElementRectTransform, easyZoneRectTransform))
             {
                 EndSkillCheckEvent(true, 1);
             }
+            //If no skill zone hit
             else
             {
                 EndSkillCheckEvent(false, 0);
@@ -96,9 +100,9 @@ public class SkillCheckEvent : MonoBehaviour
     //Returns if rectangular UI elements overlap by looking at local positions
     bool isOverlapping(RectTransform firstRectTransform, RectTransform secondRectangle)
     {
-        //Defines local rectangle to check if rectangle transforms are overlapping
-        Rect firstRect = new Rect(firstRectTransform.localPosition.x, firstRectTransform.localPosition.y, firstRectTransform.rect.width, firstRectTransform.rect.height);
-        Rect secondRect = new Rect(secondRectangle.localPosition.x, secondRectangle.localPosition.y, secondRectangle.rect.width, secondRectangle.rect.height);
+        //Defines rectangle to check if rectangle transforms are overlapping
+        Rect firstRect = new Rect(firstRectTransform.position.x- firstRectTransform.rect.width/2, firstRectTransform.position.y, firstRectTransform.rect.width, firstRectTransform.rect.height);
+        Rect secondRect = new Rect(secondRectangle.position.x- secondRectangle.rect.width/2, secondRectangle.position.y, secondRectangle.rect.width, secondRectangle.rect.height);
 
         //Rerturns true if overlapping
         return firstRect.Overlaps(secondRect);
