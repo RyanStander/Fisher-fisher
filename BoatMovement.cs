@@ -85,20 +85,16 @@ public class BoatMovement : MonoBehaviour
         }
         playerMovement();
     }
-
-    float turningMomentum;
     private void playerMovement()
     {
         //Turning
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetAxis("Horizontal") < 0)
         {
             //Store old momentum
             turningMomentumLeft = -turningStrength * playerSpeed;
 
             //Rotate "Left"
             transform.Rotate(-turningStrength * playerSpeed * Vector3.up);
-
-            Debug.Log("I AM TURNING LEFT");
         }
         else
         {
@@ -113,20 +109,16 @@ public class BoatMovement : MonoBehaviour
                 turningMomentumLeft *= turningSlowdown;
             }
             transform.Rotate(turningMomentumLeft * Vector3.up);
-
-            Debug.Log("NO INPUT");
         }
 
         //Turning
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetAxis("Horizontal") > 0)
         {
             //Store old momentum
             turningMomentumRight = turningStrength * playerSpeed;
 
             //Rotate "Right"
             transform.Rotate(turningStrength * playerSpeed * Vector3.up);
-
-            Debug.Log("I AM TURNING RIGHT");
         }
         else
         {
@@ -141,15 +133,14 @@ public class BoatMovement : MonoBehaviour
                 turningMomentumRight *= turningSlowdown;
             }
             transform.Rotate(turningMomentumRight * Vector3.up);
-            Debug.Log("NO INPUT");
         }
 
         //Forward/Backwards
-        if (Input.GetKey(KeyCode.W) && playerSpeed <= maximumSpeed+currentAccelarationBoost)
+        if (Input.GetAxis("Vertical")>0 && playerSpeed <= maximumSpeed+currentAccelarationBoost)
         {
             playerSpeed += speedFrontStrength+enginePowerLevel[StaticValues.EnginePower] + currentAccelarationBoost;
         }
-        if (Input.GetKey(KeyCode.S) && playerSpeed >= -maximumSpeed + currentAccelarationBoost) //Speed up is weaker in reverse
+        if (Input.GetAxis("Vertical") < 0 && playerSpeed >= -maximumSpeed + currentAccelarationBoost) //Speed up is weaker in reverse
         {
             playerSpeed -= speedBackStrength - enginePowerLevel[StaticValues.EnginePower] + currentAccelarationBoost;
         }
