@@ -61,8 +61,6 @@ public class CameraBoostFOV : MonoBehaviour
     {
         if(isBoosting)
         {
-            Debug.Log("FOV: "+ thisCamera.fieldOfView);
-
             //Toggle boost off when original FOV has been reached
             if(originalFOV == targetFOV && thisCamera.fieldOfView == originalFOV)
             {
