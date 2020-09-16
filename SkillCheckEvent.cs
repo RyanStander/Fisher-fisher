@@ -71,22 +71,25 @@ public class SkillCheckEvent : MonoBehaviour
         RectTransform hardZoneRectTransform = hardSkillZone.GetComponent<RectTransform>();
         RectTransform movingElementRectTransform = movingElement.GetComponent<RectTransform>();
 
-        //If the moving element overlaps the stationary element, boost and end the current skill check event
-        if (isOverlapping(easyZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
+        //If the moving element overlaps the skill zones, boost and end the current skill check event
+        if(Input.GetKeyDown(KeyCode.Space))
         {
-            EndSkillCheckEvent(true,1);
-        }
-        else if (isOverlapping(mediumZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
-        {
-            EndSkillCheckEvent(true,2);
-        }
-        else if (isOverlapping(hardZoneRectTransform, movingElementRectTransform) && Input.GetKeyDown(KeyCode.Space))
-        {
-            EndSkillCheckEvent(true,3);
-        }
-        else if(Input.GetKeyDown(KeyCode.Space))
-        {
-            EndSkillCheckEvent(false,0);
+            if (isOverlapping(hardZoneRectTransform, movingElementRectTransform))
+            {
+                EndSkillCheckEvent(true, 3);
+            }
+            else if (isOverlapping(mediumZoneRectTransform, movingElementRectTransform))
+            {
+                EndSkillCheckEvent(true, 2);
+            }
+            else if (isOverlapping(easyZoneRectTransform, movingElementRectTransform))
+            {
+                EndSkillCheckEvent(true, 1);
+            }
+            else
+            {
+                EndSkillCheckEvent(false, 0);
+            }
         }
     }
 
